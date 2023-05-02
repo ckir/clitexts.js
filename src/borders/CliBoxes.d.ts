@@ -124,4 +124,4 @@ declare const cliBoxes: cliBoxes.Boxes & {
 	default: typeof cliBoxes;
 };
 
-export = cliBoxes;
+export default cliBoxes;

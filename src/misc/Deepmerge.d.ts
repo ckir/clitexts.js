@@ -17,4 +17,4 @@ declare namespace deepmerge {
 	export function all<T> (objects: Partial<T>[], options?: Options): T;
 }
 
-export = deepmerge;
+export default deepmerge;

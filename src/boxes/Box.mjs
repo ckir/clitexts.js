@@ -7,7 +7,7 @@ import cliTruncate from '../text/CliTruncate.mjs'
 import ThemeManager from '../themes/ThemeManager.mjs'
 import TextEmitter from '../text/TextEmitter.mjs'
 
-export default class BoxAbstract extends EventEmitter {
+export default class Box extends EventEmitter {
 
     #defaultsBoxAbstract = {
         boxStyle: { themeName: 'Default.dark', borderStyle: 'round', color: 'green' },
@@ -126,7 +126,7 @@ import cliCursor from '../terminal/CliCursor.mjs'
 // const input = 'The quick brown ' + chalk.red('fox jumped over ') +
 //     'the lazy ' + chalk.green('dog and then ran away with the unicorn. ');
 const input = 'The quick brown';
-let box = new BoxAbstract(80, 20)
+let box = new Box(80, 20)
 cliCursor.hide()
 box.on('box', (boxrows) => {
     const rows = boxrows.split(/\r\n|\r|\n/).length + 1

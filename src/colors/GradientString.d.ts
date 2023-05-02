@@ -40,4 +40,4 @@ declare namespace gradient {
 declare function gradient(colors: tinycolor.ColorInput[] | gradient.PositionedColorInput[]): gradient.Gradient;
 declare function gradient(...colors: tinycolor.ColorInput[]): gradient.Gradient;
 declare function gradient(...colors: gradient.PositionedColorInput[]): gradient.Gradient;
-export = gradient;
+export default gradient;

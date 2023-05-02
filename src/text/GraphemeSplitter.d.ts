@@ -21,5 +21,5 @@
     countGraphemes(s: string): number;
   }
   
-  export = GraphemeSplitter;
+  export default GraphemeSplitter;
   

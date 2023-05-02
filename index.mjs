@@ -13,6 +13,7 @@ import isMergeableObject from './src/misc/IsMergeableObject.mjs'
 import mimicFunction from './src/misc/MimicFn.mjs'
 import onetime from './src/misc/OneTime.mjs'
 import safeStringify from './src/misc/SafeStringify.mjs'
+import ansiEscapes from './src/terminal/AnsiEscapes.mjs'
 import cliCursor from './src/terminal/CliCursor.mjs'
 import isUnicodeSupported from './src/terminal/IsUnicodeSupported.mjs'
 import restoreCursor from './src/terminal/RestoreCursor.mjs'
@@ -51,6 +52,7 @@ export default {
     mimicFunction,
     onetime,
     safeStringify,
+    ansiEscapes,
     cliCursor,
     isUnicodeSupported,
     restoreCursor,

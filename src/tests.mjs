@@ -1,53 +1,99 @@
-
-
-
-import gradient from './colors/GradientString.mjs'
-let duck = gradient('orange', 'yellow').multiline([
-    "  __",
-    "<(o )___",
-    " ( ._> /",
-    "  `---'",
-].join('\n'));
-console.log(duck);
-
-// Works with aliases
-console.log(gradient.atlas.multiline('Multi line\nstring'));
-
-// Works with advanced options
-console.log(gradient('cyan', 'pink').multiline('Multi line\nstring', {interpolation: 'hsv'}));
-
-import widestLine from './text/WidestLine.mjs'
-let b = widestLine('古\n\u001B[1m@\u001B[22m');
-
-import Table from "./boxes/Table.mjs"
-const table = new Table({
-    chars: {
-        'top': '═', 'top-mid': '╤', 'top-left': '╔', 'top-right': '╗',
-        'bottom': '═', 'bottom-mid': '╧', 'bottom-left': '╚', 'bottom-right': '╝',
-        'left': '║', 'left-mid': '╟', 'mid': '─', 'mid-mid': '┼',
-        'right': '║', 'right-mid': '╢', 'middle': '│'
+import { Attribute, ColorMode, TerminalBuffer, Printer } from 'terminal-canvas';
+if (!process.stdout.isTTY) {
+    throw new Error('Not tty');
+}
+const border = 4;
+const panelWidth = 60;
+const gap = 4;
+let lastInput = '';
+const tty = process.stdout;
+process.stdin.setRawMode(true);
+process.stdin.setEncoding('utf-8');
+process.stdin.on('data', (key) => {
+    const CTRL_C = '\x03';
+    lastInput = '';
+    for (let k of key) {
+        if (k === CTRL_C) {
+            process.emit('SIGINT', 'SIGINT');
+        }
+        else {
+            lastInput += k;
+        }
     }
 });
-
-table.push(
-    ['foo', 'bar', 'baz'],
-    ['frob', 'bar', 'quuz']
-);
-
-console.log(table.toString());
-
-
-
-
-
-import cliTruncate from './text/CliTruncate.mjs'
-
-
-import stripAnsi from './text/AnsiStrip.mjs';
-
-console.log(stripAnsi('\u001B[4mUnicorn\u001B[0m'));
-//=> 'Unicorn'
-
-console.log(stripAnsi('\u001B]8;;https://github.com\u0007Click\u001B]8;;\u0007'));
-//=> 'Click'
-
+const scrollBuf = new TerminalBuffer(tty.columns + panelWidth + gap, tty.rows);
+const subBuf = new TerminalBuffer(tty.columns, 1);
+const printer = new Printer(tty.columns, tty.rows);
+async function main() {
+    await printer.initScreen();
+    let offset = 0;
+    let y = 0;
+    const MAX_RECORD_SIZE = 20;
+    let lastRecords = [0];
+    let sum = 0;
+    const str = '中文測試, Test中文測試';
+    const strLength = TerminalBuffer.lengthOf(str);
+    let prevCol = tty.columns;
+    let prevRow = tty.rows;
+    while (!tty.writableEnded) {
+        const resized = prevCol !== tty.columns || prevRow !== tty.rows;
+        if (resized) {
+            scrollBuf.resize(tty.columns + panelWidth + gap, tty.rows);
+            subBuf.resize(tty.columns, 1);
+            printer.resize(tty.columns, tty.rows);
+            prevCol = tty.columns;
+            prevRow = tty.rows;
+        }
+        offset = (offset + 1) % (panelWidth + gap);
+        const start = Date.now();
+        if (offset === 0) {
+            y = (y + 1) % (scrollBuf.height - border * 2);
+            for (let i = 0; i < 2; i++) {
+                const attr = Attribute.from({
+                    colorForegroundMode: ColorMode.Palette,
+                    colorForeground: ~~(Math.random() * 8),
+                    colorBackgroundMode: ColorMode.Palette,
+                    colorBackground: ~~(Math.random() * 8 + 8)
+                });
+                const x = ~~((panelWidth + strLength) * Math.random()) - strLength;
+                scrollBuf.write(y + border, x, str, attr, 0, panelWidth);
+            }
+        }
+        const h = scrollBuf.height - border * 2;
+        for (let i = 1; panelWidth + panelWidth * (i - 1) + gap * i < scrollBuf.width; i++) {
+            scrollBuf.draw(scrollBuf, border, 0, border, panelWidth + panelWidth * (i - 1) + gap * i, h, panelWidth);
+        }
+        subBuf.clear();
+        subBuf.write(0, 0, `Last ${lastRecords.length.toString().padStart(2, ' ')} draw average: ${Math.floor(sum / lastRecords.length).toString().padStart(4, ' ')} ms, `
+            + `Surface: ${printer.width} x ${printer.height}, `
+            + `Last input: ${lastInput.replace(/[\x00-\x1f\x20\x7f]/g, c => `\\x${c.charCodeAt(0).toString(16).padStart(2, '0')}`)}`);
+        printer.draw(scrollBuf, 0, offset, 0, 0, scrollBuf.height, scrollBuf.width);
+        printer.draw(subBuf, 0, 0, printer.height - 1, 0, subBuf.height, subBuf.width);
+        if (!resized) {
+            await printer.updateScreen();
+        }
+        else {
+            await printer.updateScreenFull();
+        }
+        const current = Date.now() - start;
+        lastRecords.push(current);
+        sum += current;
+        if (lastRecords.length > MAX_RECORD_SIZE) {
+            const item = lastRecords.shift();
+            sum -= item;
+        }
+        await new Promise(r => setTimeout(r, 50));
+    }
+}
+process.stdout.on('finish', () => {
+    process.exit(0);
+});
+process.on('SIGINT', () => {
+    process.stdout.write('\r\n');
+    process.stdout.end();
+});
+process.on('SIGTERM', () => {
+    process.stdout.write('\r\n');
+    process.stdout.end();
+});
+main();

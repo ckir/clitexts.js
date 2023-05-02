@@ -668,5 +668,5 @@ declare namespace tinycolor {
 }
 
 declare const tinycolor: tinycolor.Constructor;
-export = tinycolor;
+export default tinycolor;
 export as namespace tinycolor;
