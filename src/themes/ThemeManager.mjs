@@ -13,12 +13,18 @@ import BorderCharacters from '../borders/Borders.mjs'
 
 export default class ThemeManager {
 
-    borderCharacters = {}
+    static #themeName = 'Default.dark'
+    static #borderType = 'round'
+
+    static #borderCharacters = {}
+    static #theme
+    static #colors
+    // static #borderStyle
 
     /**
      * @param {string|object} value
      */
-    set borderStyle(value) {
+    static set #borderStyle(value) {
 
         const objectsHaveSameKeys = (...objects) => {
             const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), []);
@@ -28,28 +34,28 @@ export default class ThemeManager {
 
         if (typeof value == 'string') {
             if (Object.keys(BorderCharacters).includes(value.toLowerCase())) {
-                this.borderCharacters = BorderCharacters[value.toLowerCase()]
+                ThemeManager.#borderCharacters = BorderCharacters[value.toLowerCase()]
             } else {
                 throw new TypeError(`borderStyle must be one of ${Object.keys(BorderCharacters).join(' or ')}`)
             }
         }
         if (typeof value == 'object') {
             if (objectsHaveSameKeys(value, BorderCharacters.single)) {
-                this.borderCharacters = boxOptions.borderStyle
+                ThemeManager.#borderCharacters = boxOptions.borderStyle
             } else {
                 throw new TypeError(`borderStyle object must have ${Object.keys(BorderCharacters.single).join(',')} properties`)
             }
         }
     }
 
-    constructor(themeName = 'Default.light', borderType = 'single') {
+    static loadTheme(themeName = ThemeManager.#themeName, borderType = ThemeManager.#borderType) {
         const scheme = require(path.join(__dirname, 'data', themeName + '.json'))
-        this.theme = this.#colorsToTheme(scheme.colors)
-        this.colors = scheme.colors
-        this.borderStyle = borderType
+        ThemeManager.#theme = ThemeManager.#colorsToTheme(scheme.colors)
+        ThemeManager.#colors = scheme.colors
+        ThemeManager.#borderStyle = borderType
     }
 
-    #colorsToTheme(colors) {
+    static #colorsToTheme(colors) {
 
         // Destructure the colors for easy access
         const {
@@ -106,16 +112,16 @@ export default class ThemeManager {
 
     }
 
-    getThemeColors() {
+    static getThemeColors() {
 
-        const colors = JSON.parse(JSON.stringify(this.colors));
-        colors.primary.padCharacter = chalk.bgHex(colors.primary.background).hex(colors.primary.foreground)(' ')
+        const colors = JSON.parse(JSON.stringify(ThemeManager.#colors));
+        colors.primary.padCharacter = chalk.bgHex(colors.primary.background).hex(colors.primary.foreground)(' ');
         colors.primary.padCharacterRepeat = (n) => { return chalk.bgHex(colors.primary.background).hex(colors.primary.foreground)(' '.repeat(n)); }
-        return colors
+        return colors;
         
     }
 
-    getThemedBoxes(theme = this.theme, borderCharacters = this.borderCharacters) {
+    static getThemedBoxes(theme = ThemeManager.#theme, borderCharacters = ThemeManager.#borderCharacters) {
 
         const boxes = {};
 
@@ -128,7 +134,7 @@ export default class ThemeManager {
             }
 
             borders['padCharacter'] = chalk.bgHex(boxColors.border.bg).hex(boxColors.border.fg)(' ');
-            const padCharacterRepeat = (n) => { return chalk.bgHex(boxColors.border.bg).hex(boxColors.border.fg)(borders['padCharacter'].repeat(n)); };
+            const padCharacterRepeat = (n) => { return chalk.bgHex(boxColors.border.bg).hex(boxColors.border.fg)(' '.repeat(n)); };
             Object.defineProperty(borders, 'padCharacterRepeat', { value: padCharacterRepeat });
             const colorizeStyle = (s) => { return chalk.bgHex(boxColors.style.bg).hex(boxColors.style.fg)(s); };
             Object.defineProperty(borders, 'colorizeStyle', { value: colorizeStyle });
@@ -141,5 +147,14 @@ export default class ThemeManager {
         return boxes;
     }
 
+    static {
+        ThemeManager.loadTheme()
+    }
+
 }
 
+// const colors = ThemeManager.getThemeColors()
+// const boxes = ThemeManager.getThemedBoxes()
+// ThemeManager.loadTheme('Dracula')
+// const colors2 = ThemeManager.getThemeColors()
+// const boxes2 = ThemeManager.getThemedBoxes()

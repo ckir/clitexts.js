@@ -16,7 +16,7 @@ export default class Box extends EventEmitter {
         boxContent: { renderOptions: { type: 'cfonts', options: {} }, colorOptions: { type: 'none', options: {} }, options: { vAlign: 'middle' } }
     }
 
-    constructor(themeManager, boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
+    constructor(boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
 
         super()
         this.boxWidth = boxWidth
@@ -24,14 +24,14 @@ export default class Box extends EventEmitter {
         this.boxOptions = deepmerge(this.#defaultsBox, boxOptions)
 
         // const themeManager = new ThemeManager(this.boxOptions.boxStyle.themeName, this.boxOptions.boxStyle.borderStyle)
-        const themedboxes = themeManager.getThemedBoxes()
+        const themedboxes = ThemeManager.getThemedBoxes()
         const boxColor = this.boxOptions.boxStyle.color + 'Box'
         if (Object.getOwnPropertyNames(themedboxes).includes(boxColor)) {
             this.box = themedboxes[boxColor]
         } else {
             this.box = themedboxes.box
         }
-        this.themeColors = themeManager.getThemeColors()
+        this.themeColors = ThemeManager.getThemeColors()
 
         this.textEmitter = new TextEmitter(this.boxOptions.boxContent.renderOptions, this.boxOptions.boxContent.colorOptions)
         this.textEmitter.on('text', (rendered) => {
