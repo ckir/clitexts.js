@@ -17,6 +17,8 @@ import ansiEscapes from './src/terminal/AnsiEscapes.mjs'
 import cliCursor from './src/terminal/CliCursor.mjs'
 import isUnicodeSupported from './src/terminal/IsUnicodeSupported.mjs'
 import restoreCursor from './src/terminal/RestoreCursor.mjs'
+import TextCanvas from './src/terminal/TextCanvas.mjs'
+import Viewport from './src/terminal/Viewport.mjs'
 import sliceAnsi from './src/text/AnsiSlice.mjs'
 import stripAnsi from './src/text/AnsiStrip.mjs'
 import wrapAnsi from './src/text/AnsiWrap.mjs'
@@ -56,6 +58,8 @@ export default {
     cliCursor,
     isUnicodeSupported,
     restoreCursor,
+    TextCanvas,
+    Viewport,
     sliceAnsi,
     stripAnsi,
     wrapAnsi,

@@ -7,22 +7,23 @@ import cliTruncate from '../text/CliTruncate.mjs'
 import ThemeManager from '../themes/ThemeManager.mjs'
 import TextEmitter from '../text/TextEmitter.mjs'
 
+
 export default class Box extends EventEmitter {
 
-    #defaultsBoxAbstract = {
-        boxStyle: { themeName: 'Default.dark', borderStyle: 'round', color: 'green' },
-        boxTitle: { text: 'Hello World', options: { hAlign: 'center' } },
-        boxContent: { renderOptions: { type: 'figlet', options: {} }, colorOptions: { type: 'animation', options: { type: 'rainbow' } }, options: { vAlign: 'middle' } }
+    #defaultsBox = {
+        boxStyle: { borderStyle: 'round', color: 'green' },
+        boxTitle: { text: '', options: { hAlign: 'center' } },
+        boxContent: { renderOptions: { type: 'cfonts', options: {} }, colorOptions: { type: 'none', options: {} }, options: { vAlign: 'middle' } }
     }
 
-    constructor(boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
+    constructor(themeManager, boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
 
         super()
         this.boxWidth = boxWidth
         this.boxHeight = boxHeight
-        this.boxOptions = deepmerge(this.#defaultsBoxAbstract, boxOptions)
+        this.boxOptions = deepmerge(this.#defaultsBox, boxOptions)
 
-        const themeManager = new ThemeManager(this.boxOptions.boxStyle.themeName, this.boxOptions.boxStyle.borderStyle)
+        // const themeManager = new ThemeManager(this.boxOptions.boxStyle.themeName, this.boxOptions.boxStyle.borderStyle)
         const themedboxes = themeManager.getThemedBoxes()
         const boxColor = this.boxOptions.boxStyle.color + 'Box'
         if (Object.getOwnPropertyNames(themedboxes).includes(boxColor)) {
@@ -122,15 +123,13 @@ export default class Box extends EventEmitter {
 
 }
 
-import cliCursor from '../terminal/CliCursor.mjs'
+// import cliCursor from '../terminal/CliCursor.mjs'
 // const input = 'The quick brown ' + chalk.red('fox jumped over ') +
 //     'the lazy ' + chalk.green('dog and then ran away with the unicorn. ');
-const input = 'The quick brown';
-let box = new Box(80, 20)
-cliCursor.hide()
-box.on('box', (boxrows) => {
-    const rows = boxrows.split(/\r\n|\r|\n/).length + 1
-    const clear = '\u001B[' + rows + 'F\u001B[G\u001B[2K'
-    console.log(clear + boxrows, '\n')
-})
-box.render(input)
+// const input = 'The quick brown';
+// let box = new Box(80, 20)
+// box.on('box', (boxrows) => {
+//     const rows = boxrows.split(/\r\n|\r|\n/).length + 1
+//     console.log(boxrows, '\n')
+// })
+// box.render(input)

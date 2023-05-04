@@ -108,7 +108,10 @@ export default class ThemeManager {
 
     getThemeColors() {
 
-        return this.colors
+        const colors = JSON.parse(JSON.stringify(this.colors));
+        colors.primary.padCharacter = chalk.bgHex(colors.primary.background).hex(colors.primary.foreground)(' ')
+        colors.primary.padCharacterRepeat = (n) => { return chalk.bgHex(colors.primary.background).hex(colors.primary.foreground)(' '.repeat(n)); }
+        return colors
         
     }
 
