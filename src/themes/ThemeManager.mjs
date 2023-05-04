@@ -13,7 +13,7 @@ import BorderCharacters from '../borders/Borders.mjs'
 
 export default class ThemeManager {
 
-    static #themeName = 'Default.dark'
+    static #themeName = 'Tango'
     static #borderType = 'round'
 
     static #borderCharacters = {}

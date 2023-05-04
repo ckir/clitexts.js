@@ -11,7 +11,7 @@ import TextEmitter from '../text/TextEmitter.mjs'
 export default class Box extends EventEmitter {
 
     #defaultsBox = {
-        boxStyle: { borderStyle: 'round', color: 'green' },
+        boxStyle: { borderStyle: 'round', color: 'default' },
         boxTitle: { text: '', options: { hAlign: 'center' } },
         boxContent: { renderOptions: { type: 'cfonts', options: {} }, colorOptions: { type: 'none', options: {} }, options: { vAlign: 'middle' } }
     }
@@ -23,7 +23,6 @@ export default class Box extends EventEmitter {
         this.boxHeight = boxHeight
         this.boxOptions = deepmerge(this.#defaultsBox, boxOptions)
 
-        // const themeManager = new ThemeManager(this.boxOptions.boxStyle.themeName, this.boxOptions.boxStyle.borderStyle)
         const themedboxes = ThemeManager.getThemedBoxes()
         const boxColor = this.boxOptions.boxStyle.color + 'Box'
         if (Object.getOwnPropertyNames(themedboxes).includes(boxColor)) {
@@ -114,9 +113,9 @@ export default class Box extends EventEmitter {
 
     }
 
-    render(text, maxOutputWidth = this.boxWidth - 2) {
+    render(text, maxOutputWidth = this.boxWidth - 2, maxOutputHeight = this.boxHeight - 2) {
 
-        this.textEmitter.renderText(text, maxOutputWidth)
+        this.textEmitter.renderText(text, maxOutputWidth, maxOutputHeight)
 
     }
 

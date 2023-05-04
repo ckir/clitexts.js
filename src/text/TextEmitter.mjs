@@ -32,7 +32,7 @@ export default class TextEmitter extends EventEmitter {
         })
     }
 
-    renderText(text, maxOutputWidth) {
+    renderText(text, maxOutputWidth, maxOutputHeight) {
 
         let rendered = null
 
@@ -44,7 +44,7 @@ export default class TextEmitter extends EventEmitter {
                 rendered = RenderFiglet.render(stripAnsi(text), maxOutputWidth, this.optionsRender.options)
                 break;
             case 'fonts':
-                rendered = RenderFonts.render(stripAnsi(text), maxOutputWidth, this.optionsRender.options)
+                rendered = RenderFonts.render(stripAnsi(text), maxOutputWidth, maxOutputHeight, this.optionsRender.options)
                 break;
             default: // ansi
                 rendered = RenderAnsi.render(text, maxOutputWidth, this.optionsRender.options)
