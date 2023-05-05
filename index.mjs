@@ -1,4 +1,3 @@
-import cliBoxes from './src/boxes/CliBoxes.mjs'
 import Table from './src/boxes/Table.mjs'
 import styles from './src/colors/AnsiStyles.mjs'
 import gradient from './src/colors/GradientString.mjs'
@@ -39,7 +38,6 @@ import widestLine from './src/text/WidestLine.mjs'
 import ThemeManager from './src/themes/ThemeManager.mjs'
 
 export default {
-    cliBoxes,
     Table,
     styles,
     gradient,
