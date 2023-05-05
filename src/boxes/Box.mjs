@@ -13,7 +13,7 @@ export default class Box extends EventEmitter {
     #defaultsBox = {
         boxStyle: { borderStyle: 'round', color: 'default' },
         boxTitle: { text: '', options: { hAlign: 'center' } },
-        boxContent: { renderOptions: { type: 'cfonts', options: {} }, colorOptions: { type: 'none', options: {} }, options: { vAlign: 'middle' } }
+        boxContent: { renderOptions: { type: 'ansi', options: {} }, colorOptions: { type: 'none', options: {} }, styleOptions: { vAlign: 'middle' } }
     }
 
     constructor(boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
@@ -48,7 +48,7 @@ export default class Box extends EventEmitter {
             if (rows.length > (this.boxHeight - 2)) {
                 rows.length = (this.boxHeight - 2)
             }
-            const vAlign = this.boxOptions.boxContent.options.vAlign
+            const vAlign = this.boxOptions.boxContent.styleOptions.vAlign
             switch (vAlign) {
                 case 'bottom':
                     for (let index = rows.length; index < (this.boxHeight - 2); index++) {

@@ -1,14 +1,14 @@
 {
-  "name": "text.js",
+  "name": "clitexts.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "library for console/tty texts",
   "main": "index.mjs",
   "type": "module",
   "scripts": {
     "debug": "node --nolazy --inspect-brk=9229 dist/lib/test.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Costas Kirgoussios",
+  "license": "MIT",
   "dependencies": {
     "canvas": "^2.11.2",
     "cfonts": "^3.1.1",
@@ -16,7 +16,6 @@
     "on-change": "^4.0.2",
     "opentype.js": "^1.3.4",
     "signal-exit": "^4.0.1",
-    "terminal-canvas": "github:ckir/terminal-canvas",
     "type-fest": "^3.9.0"
   },
   "devDependencies": {

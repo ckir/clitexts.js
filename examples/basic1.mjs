@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import ThemeManager from "../src/themes/ThemeManager.mjs"
 import TextCanvas from "../src/terminal/TextCanvas.mjs"
 import Box from "../src/boxes/Box.mjs"
@@ -46,32 +47,142 @@ const textCanvas = new TextCanvas(640, 480, { cleanValue: themeColors.primary.pa
 // The 'animation' method emits frames at time intervals specified by each animation
 // therefore can cause cpu overloading problems on low hardware systems
 
+const input = 'The quick brown ' + chalk.red('fox jumped over ') +
+    'the lazy ' + chalk.green('dog and then ran away with the unicorn. 💛')
 
+// Themed box default values
 const box1 = new Box(150, 10)
-box1.on('box', (boxrows) => {
+box1.on('box', (boxrows) => { // box1 will emit just once
     const rows = boxrows.split(/\r\n|\r|\n/)
     textCanvas.draw(2, 2, rows)
 })
-const box2 = new Box(150, 10, {boxStyle:{color: 'red'}})
+box1.render(input)
+
+// A more advanced setup
+const box2renderOptions = {
+    type: 'figlet',
+    options: {
+        fontName: 'ANSI Regular',
+        wordWrap: 'letter',
+        textAlign: 'center'
+    }
+}
+const box2colorOptions = {
+    type: 'animation',
+    options: {
+        type: 'karaoke'
+        // ['rainbow', 'pulse', 'glitch', 'radar', 'neon', 'karaoke']
+    }
+}
+const box2styleOptions = { options: { vAlign: 'middle' } }
+const box2boxContent = {
+    renderOptions: box2renderOptions,
+    colorOptions: box2colorOptions,
+    styleOptions: box2styleOptions
+}
+
+const box2options = {
+    boxStyle: { borderStyle: 'round', color: 'yellow' },
+    boxTitle: { text: 'Box Title', options: { hAlign: 'center' } },
+    boxContent: box2boxContent
+}
+const box2 = new Box(150, 10, box2options)
 box2.on('box', (boxrows) => {
     const rows = boxrows.split(/\r\n|\r|\n/)
     textCanvas.draw(13, 2, rows)
 })
-const box3options = {
-    boxStyle: { borderStyle: 'round', color: 'yellow' },
-    boxTitle: { text: 'Box Title', options: { hAlign: 'center' } },
-    boxContent: { renderOptions: { type: 'fonts', options: {textAlign: 'center', textScale: 'height'} }, colorOptions: { type: 'gradient', options: { gradient: 'rainbow' } }, options: { vAlign: 'middle' } }
+box2.render('Important')
+
+// Lets use ttf
+const box3renderOptions = {
+    type: 'fonts',
+    options: {
+        fontFile: 'src/assets/fonts/regular/Acme 9 Regular Xtnd.ttf',
+        textAlign: 'center',
+        textScale: 'height'
+    }
 }
-const box3 = new Box(150, 16, box3options)
+const box3colorOptions = {
+    type: 'gradient',
+    options: {
+        gradient: 'rainbow'
+        // ['atlas', 'cristal', 'teen', 'mind', 'morning',
+        //  'vice', 'passion', 'fruit', 'instagram', 'retro',
+        //  'summer', 'rainbow', 'pastel']
+    }
+}
+const box3styleOptions = { options: { vAlign: 'middle' } }
+const box3boxContent = {
+    renderOptions: box3renderOptions,
+    colorOptions: box3colorOptions,
+    styleOptions: box3styleOptions
+}
+
+const box3options = {
+    boxStyle: { borderStyle: 'round', color: 'red' },
+    boxTitle: { text: 'Box Title', options: { hAlign: 'center' } },
+    boxContent: box3boxContent
+}
+
+const box3 = new Box(150, 14, box3options)
 box3.on('box', (boxrows) => {
     const rows = boxrows.split(/\r\n|\r|\n/)
     textCanvas.draw(24, 2, rows)
 })
 
-// Step 4 - Provide data to your boxes
 setInterval(() => {
     let time = new Date().toISOString().split('T')[1].split('.')[0]
-    box1.render(time)
-    box2.render(time+ ' 💛') // '💛' not shown unless 'ansi' renderer is used
     box3.render(time)
+}, 1000)
+
+// Lets use cfonts
+// While we can use any coloring method ('color' | 'gradient' | 'animation')
+// for this example we will use the 'none' method and let cfonts to do the coloring
+// However we have to provide the backgroundColor from our theme as shown below
+const box4colorOptions = {
+    type: 'none',
+    options: {}
+}
+
+const box4renderOptions = {
+    type: 'cfonts',
+    options: {
+        // console, block, simpleBlock, simple, 3d, simple3d, chrome, huge, shade, slick, grid, pallet, tiny
+        font: 'slick',              // define the font face
+        align: 'center',              // define text alignment
+        colors: ['system'],         // define all colors
+        // background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
+        background: themeColors.primary.background,  // define the background color, you can also use `backgroundColor` here as key
+        letterSpacing: 1,           // define letter spacing
+        lineHeight: 1,              // define the line height
+        space: true,                // define if the output text should have empty lines on top and on the bottom
+        maxLength: '0',             // define how many character can be on one line
+        gradient: ['red', 'blue'],            // define your two gradient colors
+        independentGradient: false, // define if you want to recalculate the gradient for each new line
+        transitionGradient: false,  // define if this is a transition between colors directly
+        env: 'node'                 // define the environment cfonts is being executed in
+    }
+}
+const box4styleOptions = { options: { vAlign: 'middle' } }
+const box4boxContent = {
+    renderOptions: box4renderOptions,
+    colorOptions: box4colorOptions,
+    styleOptions: box4styleOptions
+}
+
+const box4options = {
+    boxStyle: { borderStyle: 'round', color: 'cyan' },
+    boxTitle: { text: 'Box Title', options: { hAlign: 'center' } },
+    boxContent: box4boxContent
+}
+
+const box4 = new Box(150, 14, box4options)
+box4.on('box', (boxrows) => {
+    const rows = boxrows.split(/\r\n|\r|\n/)
+    textCanvas.draw(40, 2, rows)
+})
+
+setInterval(() => {
+    let time = new Date().toISOString().split('T')[1].split('.')[0]
+    box4.render(time)
 }, 1000)
