@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Current",
-            "runtimeExecutable": "/home/user/.nvm/versions/node/v19.8.1/bin/node",
+            "runtimeExecutable": "/home/user/.nvm/versions/node/v20.1.0/bin/node",
             "skipFiles": [
                 "<node_internals>/**"
             ],
