@@ -47,8 +47,8 @@ const textCanvas = new TextCanvas(640, 480, { cleanValue: themeColors.primary.pa
 // The 'animation' method emits frames at time intervals specified by each animation
 // therefore can cause cpu overloading problems on low hardware systems
 
-const input = 'The quick brown ' + chalk.red('fox jumped over ') +
-    'the lazy ' + chalk.green('dog and then ran away with the unicorn. 💛')
+const input = 'The quick 🌷🎁💩' + chalk.bgGrey(' 😜👍🏳️‍🌈 brown ') + chalk.red('fox jumped over ') +
+    'the lazy ' + chalk.green('dog and then') + chalk.bgRedBright(' ran away with the unicorn. 💛 ')
 
 // Themed box default values
 const box1 = new Box(150, 10)

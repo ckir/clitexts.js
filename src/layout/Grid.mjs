@@ -1,3 +1,5 @@
+// From https://github.com/watson/virtual-grid
+
 'use strict'
 import { EventEmitter } from 'node:events'
 import wrapAnsi from '../text/AnsiWrap.mjs'

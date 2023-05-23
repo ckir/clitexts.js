@@ -1,0 +1,67 @@
+/// <reference types="node" resolution-mode="require"/>
+import { TextBuffer } from "./text_buffer.js";
+export declare class Canvas {
+    cols: number;
+    rows: number;
+    nextBuffer: TextBuffer;
+    currentBuffer?: TextBuffer;
+    _all?: Region;
+    dirty: boolean;
+    forceAll: boolean;
+    dirtyListener?: () => void;
+    dirtyTimer?: NodeJS.Timeout;
+    dirtyDebounceDelay: number;
+    id: number;
+    constructor(cols: number, rows: number);
+    toString(): string;
+    get cursor(): [number, number];
+    onDirty(debounceDelay: number, f: (() => void) | undefined): void;
+    resize(cols: number, rows: number): void;
+    redraw(): void;
+    all(): Region;
+    clip(x1: number, y1: number, x2: number, y2: number): Region;
+    setDirty(): void;
+    write(x: number, y: number, attr: number, s: string): void;
+    writeChars(x: number, y: number, attr: number, chars: string[]): void;
+    transform(f: (fg: number, bg: number, char: number, x: number, y: number) => number[]): void;
+    paint(): string;
+    paintInline(): string;
+}
+export declare class Region {
+    canvas: Canvas;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    cursorX: number;
+    cursorY: number;
+    attr: number;
+    resizeListeners: Set<() => void>;
+    parent?: Region;
+    constructor(canvas: Canvas, x1: number, y1: number, x2: number, y2: number);
+    toString(): string;
+    get cols(): number;
+    get rows(): number;
+    get parentOffset(): [number, number];
+    offsetFrom(region: Region): [number, number];
+    onResize(f: () => void): void;
+    removeOnResize(f: () => void): void;
+    all(): Region;
+    clip(x1: number, y1: number, x2: number, y2: number): Region;
+    resize(x1: number, y1: number, x2: number, y2: number): void;
+    color(fg?: string | number, bg?: string | number): this;
+    backgroundColor(bg: string | number): this;
+    at(x: number, y: number): this;
+    move(xDelta: number, yDelta: number): this;
+    clear(): this;
+    clearToEndOfLine(): this;
+    write(s: string): this;
+    private writeLine;
+    private lf;
+    draw(other: Region): this;
+    scrollUp(rows?: number): this;
+    scrollDown(rows?: number): this;
+    scrollLeft(cols?: number): this;
+    scrollRight(cols?: number): this;
+    moveCursor(x?: number, y?: number): this;
+}

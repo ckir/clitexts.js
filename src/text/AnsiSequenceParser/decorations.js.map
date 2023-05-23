@@ -1,0 +1,1 @@
+{"version":3,"file":"decorations.js","sourceRoot":"","sources":["../../../../src/ansi-sequence-parser/src/decorations.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,WAAW,GAA2B;IACjD,CAAC,EAAE,MAAM;IACT,CAAC,EAAE,KAAK;IACR,CAAC,EAAE,QAAQ;IACX,CAAC,EAAE,WAAW;IACd,CAAC,EAAE,SAAS;IACZ,CAAC,EAAE,eAAe;CACV,CAAC"}
