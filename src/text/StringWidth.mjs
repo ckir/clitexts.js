@@ -1,7 +1,7 @@
 // https://github.com/sindresorhus/string-width
 
 import stripAnsi from './AnsiStrip.mjs';
-import eastAsianWidth from './EastAsianWidth.mjs';
+import { eastAsianWidth } from './EastAsianWidth.mjs';
 import emojiRegex from './RegexEmoji.mjs';
 
 export default function stringWidth(string, options = {}) {
@@ -9,23 +9,22 @@ export default function stringWidth(string, options = {}) {
 		return 0;
 	}
 
-	options = {
-		ambiguousIsNarrow: true,
-		...options
-	};
+	const {
+		ambiguousIsNarrow = true,
+		countAnsiEscapeCodes = false,
+	} = options;
 
-	string = stripAnsi(string);
+	if (!countAnsiEscapeCodes) {
+		string = stripAnsi(string);
+	}
 
 	if (string.length === 0) {
 		return 0;
 	}
 
-	string = string.replace(emojiRegex(), '  ');
-
-	const ambiguousCharacterWidth = options.ambiguousIsNarrow ? 1 : 2;
 	let width = 0;
 
-	for (const character of string) {
+	for (const { segment: character } of new Intl.Segmenter().segment(string)) {
 		const codePoint = character.codePointAt(0);
 
 		// Ignore control characters
@@ -34,22 +33,16 @@ export default function stringWidth(string, options = {}) {
 		}
 
 		// Ignore combining characters
-		if (codePoint >= 0x300 && codePoint <= 0x36F) {
+		if (codePoint >= 0x3_00 && codePoint <= 0x3_6F) {
 			continue;
 		}
 
-		const code = eastAsianWidth.eastAsianWidth(character);
-		switch (code) {
-			case 'F':
-			case 'W':
-				width += 2;
-				break;
-			case 'A':
-				width += ambiguousCharacterWidth;
-				break;
-			default:
-				width += 1;
+		if (emojiRegex().test(character)) {
+			width += 2;
+			continue;
 		}
+
+		width += eastAsianWidth(codePoint, { ambiguousAsWide: !ambiguousIsNarrow });
 	}
 
 	return width;

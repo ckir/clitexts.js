@@ -10,6 +10,7 @@ import RenderCFonts from './RenderCfonts.mjs'
 import RenderFiglet from './RenderFiglet.mjs'
 import RenderFonts from './RenderFonts.mjs'
 import stringWidth from './StringWidth.mjs'
+import { detectStrings } from './EmojiDetect.mjs'
 import TextAnimation from '../colors/TextAnimation.mjs'
 
 export default class TextEmitter extends EventEmitter {
@@ -54,7 +55,10 @@ export default class TextEmitter extends EventEmitter {
         rendered.forEach((line, index) => {
             let rows = line.split('\n')
             rows = rows.map((row) => {
-                const padLength = maxOutputWidth - stringWidth(row)
+                // Fix around bug in stringWidth not supporting 🏳️‍🌈
+                let adjust = detectStrings(row).filter(item => item.includes("-")).length
+                adjust = (adjust > 0) ? adjust * 3 - adjust + 1 : 0
+                const padLength = maxOutputWidth - stringWidth(row) - adjust
                 return (padLength > 0) ? row + ' '.repeat(padLength) : row
             })
             rendered[index] = rows.join('\n')

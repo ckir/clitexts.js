@@ -119,7 +119,6 @@ export default class Box extends EventEmitter {
 
     }
 
-
 }
 
 // import cliCursor from '../terminal/CliCursor.mjs'
