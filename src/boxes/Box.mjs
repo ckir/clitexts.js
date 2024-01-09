@@ -10,18 +10,23 @@ import TextEmitter from '../text/TextEmitter.mjs'
 
 export default class Box extends EventEmitter {
 
-    #defaultsBox = {
-        boxStyle: { borderStyle: 'round', color: 'default' },
-        boxTitle: { text: '', options: { hAlign: 'center' } },
-        boxContent: { renderOptions: { type: 'ansi', options: {} }, colorOptions: { type: 'none', options: {} }, styleOptions: { vAlign: 'middle' } }
-    }
-
     constructor(boxWidth = process.stdout.columns || 79, boxHeight = process.stdout.rows || 3, boxOptions = {}) {
 
         super()
         this.boxWidth = boxWidth
         this.boxHeight = boxHeight
-        this.boxOptions = deepmerge(this.#defaultsBox, boxOptions)
+        const themeColors = ThemeManager.getThemeColors()
+        const defaultsBox = {
+            boxStyle: { borderStyle: 'round', color: 'default' },
+            boxTitle: { text: '', options: { hAlign: 'center' } },
+            boxContent: {
+                renderOptions: { type: 'ansi', options: {} },
+                colorOptions: { type: 'color', options: {fg: themeColors.primary.foreground, bg: themeColors.primary.background} },
+                styleOptions: { vAlign: 'middle' }
+            }
+        }
+
+        this.boxOptions = deepmerge(defaultsBox, boxOptions)
 
         const themedboxes = ThemeManager.getThemedBoxes()
         const boxColor = this.boxOptions.boxStyle.color + 'Box'
@@ -79,8 +84,7 @@ export default class Box extends EventEmitter {
 
         })
 
-
-    }
+    } // constructor
 
     #getLineTop(box = this.box, titleText = this.boxOptions.boxTitle.text, hAlign = this.boxOptions.boxTitle.options.hAlign, lineWidth = this.boxWidth) {
 

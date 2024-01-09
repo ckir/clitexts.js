@@ -17,6 +17,8 @@ class RenderFonts {
     static #_ctx = RenderFonts.#_canvas.getContext('2d')
 
     static #_loadFont(fontRealpath) {
+        const isFileNameOnly = path.basename(fontRealpath) === fontRealpath
+        fontRealpath = (isFileNameOnly)? path.join(RenderFonts.#_defaultFontsFolderPath, fontRealpath): fontRealpath
         if (!RenderFonts.#_loadedFonts[fontRealpath]) RenderFonts.#_loadedFonts[fontRealpath] = opentype.loadSync(fontRealpath)
         if (!RenderFonts.#_loadedFonts[fontRealpath].supported) {
             throw new ValueError(`${fontRealpath}: Font not supported`)

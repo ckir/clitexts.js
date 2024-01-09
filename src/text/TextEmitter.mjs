@@ -15,8 +15,15 @@ import TextAnimation from '../colors/TextAnimation.mjs'
 
 export default class TextEmitter extends EventEmitter {
 
-    #defaultsRender = { type: 'ansi', options: {} } // 'ansi' | 'figlet' | 'fonts' | 'cfonts'
-    #defaultsColor = { type: 'none', options: {} } // 'none' | 'color' | 'gradient' | 'animation'
+    #defaultsRender = {
+        type: 'ansi',
+        options: {}
+    } // 'ansi' | 'figlet' | 'fonts' | 'cfonts'
+
+    #defaultsColor = {
+        type: 'none',
+        options: {}
+    } // 'none' | 'color' | 'gradient' | 'animation'
 
     #animator = new TextAnimation()
     #animation = null
