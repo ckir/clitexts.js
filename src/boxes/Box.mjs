@@ -129,11 +129,11 @@ export default class Box extends EventEmitter {
 }
 
 
-const input = 'The ελληνικά quick 字 🌷🎁💩 🏳️‍🌈\u001b[100m 😜👍brown 🏳️‍🌈 \u001b[49m\u001b[31mfox jumped 🏳️‍🌈 over \u001b[39mthe lazy \u001b[32mdog and 字 then\u001b[39m\u001b[101m ran away 🏳️‍🌈 with the🌷🎁💩unicorn. 💛 \u001b[49m'
-// const input = 'The quick brown';
-let box = new Box(process.stdout.columns - 5, process.stdout.rows - 5)
-box.on('box', (boxrows) => {
-    const rows = boxrows.split(/\r\n|\r|\n/).length + 1
-    console.log(boxrows, '\n')
-})
-const boxed = box.render(input)
+// const input = 'The ελληνικά quick 字 🌷🎁💩 🏳️‍🌈\u001b[100m 😜👍brown 🏳️‍🌈 \u001b[49m\u001b[31mfox jumped 🏳️‍🌈 over \u001b[39mthe lazy \u001b[32mdog and 字 then\u001b[39m\u001b[101m ran away 🏳️‍🌈 with the🌷🎁💩unicorn. 💛 \u001b[49m'
+// // const input = 'The quick brown';
+// let box = new Box(process.stdout.columns - 5, process.stdout.rows - 5)
+// box.on('box', (boxrows) => {
+//     const rows = boxrows.split(/\r\n|\r|\n/).length + 1
+//     console.log(boxrows, '\n')
+// })
+// const boxed = box.render(input)
