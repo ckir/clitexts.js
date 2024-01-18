@@ -147,7 +147,7 @@ const box4colorOptions = {
 const box4renderOptions = {
     type: 'cfonts',
     options: {
-        // console, block, simpleBlock, simple, 3d, simple3d, chrome, huge, shade, slick, grid, pallet, tiny
+        // 3d, block, chrome, console, grid, huge, pallet, shade, simple, simple3d, simpleBlock, slick, tiny
         font: 'slick',              // define the font face
         align: 'center',              // define text alignment
         colors: ['system'],         // define all colors

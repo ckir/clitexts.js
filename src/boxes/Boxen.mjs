@@ -1,12 +1,12 @@
 // https://github.com/sindresorhus/boxen
 import process from 'node:process';
-import stringWidth from '../text/StringWidth.mjs';
+import stringWidth from '../text/lib/StringWidth.mjs';
 import chalk from 'chalk';
-import widestLine from '../text/WidestLine.mjs';
+import widestLine from '../text/lib/WidestLine.mjs';
 import cliBoxes from '../borders/CliBoxes.mjs';
-import camelCase from '../text/CamelCase.mjs';
-import ansiAlign from '../text/AnsiAlign.mjs';
-import wrapAnsi from '../text/AnsiWrap.mjs';
+import camelCase from '../text/lib/CamelCase.mjs';
+import ansiAlign from '../text/lib/AnsiAlign.mjs';
+import wrapAnsi from '../text/lib/AnsiWrap.mjs';
 
 const NEWLINE = '\n';
 const PAD = ' ';

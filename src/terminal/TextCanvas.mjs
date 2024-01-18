@@ -1,9 +1,9 @@
 import { EventEmitter } from 'node:events'
-import sliceAnsi from '../text/AnsiSlice.mjs'
-import stringWidth from '../text/StringWidth.mjs'
+import sliceAnsi from '../text/lib/AnsiSlice.mjs'
+import stringWidth from '../text/lib/StringWidth.mjs'
 import Viewport from './Viewport.mjs'
 
-import stripAnsi from '../text/AnsiStrip.mjs'
+import stripAnsi from '../text/lib/AnsiStrip.mjs'
 
 export default class TextCanvas extends EventEmitter {
 

@@ -1,6 +1,6 @@
 import Box from "./Box.mjs"
 import deepmerge from "../misc/Deepmerge.mjs"
-import wrapAnsi from "../text/AnsiWrap.mjs"
+import wrapAnsi from "../text/lib/AnsiWrap.mjs"
 
 export default class BoxScrollable extends Box {
 

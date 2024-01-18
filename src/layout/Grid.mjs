@@ -2,9 +2,9 @@
 
 'use strict'
 import { EventEmitter } from 'node:events'
-import wrapAnsi from '../text/AnsiWrap.mjs'
-import sliceAnsi from '../text/AnsiSlice.mjs'
-import fixedWidthString from '../text/AnsiFixedWidthString.mjs'
+import wrapAnsi from '../text/lib/AnsiWrap.mjs'
+import sliceAnsi from '../text/lib/AnsiSlice.mjs'
+import fixedWidthString from '../text/lib/AnsiFixedWidthString.mjs'
 
 
 function normalizeSize (size, max) {
