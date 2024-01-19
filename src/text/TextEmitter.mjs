@@ -25,14 +25,17 @@ export default class TextEmitter extends EventEmitter {
     // Defaults for 'none' | 'color' | 'gradient' | 'theme'
     #defaultsColor = {
         none: {},
-        color: {},
+        color: {
+            // foreground: '#ffffff', // '# hex value'
+            // background: '#000000'  // '# hex value'
+        },
         theme: {
             brightness: 'normal', // 'normal' | 'bright'
             foreground: 'foreground', // 'foreground' | 'black' | 'blue' | 'cyan' | 'green' | 'magenta' | 'red' | 'white' | 'yellow' | '# hex value'
             background: 'background'  // 'background' | 'black' | 'blue' | 'cyan' | 'green' | 'magenta' | 'red' | 'white' | 'yellow' | '# hex value'
         },
         gradient: {
-            gradient: 'rainbow', // [of hex color values] or predefined: 'atlas' | 'cristal' | 'teen' | 'mind' | 'morning' | 'vice' | 'passion' | 'fruit' | 'instagram' | 'retro' | 'summer' | 'rainbow' | 'pastel'
+            gradient: 'rainbow', // [array of hex color values] or predefined: 'atlas' | 'cristal' | 'teen' | 'mind' | 'morning' | 'vice' | 'passion' | 'fruit' | 'instagram' | 'retro' | 'summer' | 'rainbow' | 'pastel'
         }
     }
 
@@ -56,10 +59,8 @@ export default class TextEmitter extends EventEmitter {
 
         this.optionsRender = deepmerge(this.#defaultsRender[renderOptions.renderType], renderOptions)
         this.optionsColor = deepmerge(this.#defaultsColor[colorOptions.colorType], colorOptions)
-        if (colorOptions.colorType == 'theme') {
-            const themeColors = ThemeManager.getThemeColors()
-            this.themeColors = { ...themeColors['primary'], ...themeColors[this.optionsColor.brightness] }
-        }
+        const themeColors = ThemeManager.getThemeColors()
+        this.themeColors = { ...themeColors['primary'], ...themeColors[this.optionsColor.brightness] }
         this.animationOptions = deepmerge(this.#defaultsAnimation[animationOptions.animationType], animationOptions)
 
         if (!this.optionsRender.renderType) this.optionsRender.renderType = 'ansi'
@@ -208,11 +209,22 @@ export default class TextEmitter extends EventEmitter {
             rendered[index].rendered = row.rendered.map(line => chalk.bgHex(bg).hex(fg)(line))
         })
 
-        // Object.values(rendered).forEach((row) => console.log(row.rendered.join('\n'), '\n'))
-
         return rendered
 
     } // applyTheme
+
+    applyCustom(rendered) {
+
+        const fg = this.optionsColor.foreground || this.themeColors.foreground
+        const bg = this.optionsColor.background || this.themeColors.background
+
+        Object.values(rendered).forEach((row, index) => {
+            rendered[index].rendered = row.rendered.map(line => chalk.bgHex(bg).hex(fg)(line))
+        })
+
+        return rendered
+
+    } // applyCustom
 
     mergedRendered(rendered) {
 
@@ -242,7 +254,7 @@ export default class TextEmitter extends EventEmitter {
 // Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque nec nam aliquam sem et tortor. Fermentum odio eu feugiat pretium nibh ipsum. Nulla pharetra diam sit amet. Et netus et malesuada fames ac turpis egestas maecenas. Orci phasellus egestas tellus rutrum. Sed tempus urna et pharetra pharetra massa massa ultricies mi. Commodo elit at imperdiet dui accumsan. Viverra ipsum nunc aliquet bibendum enim facilisis gravida. Eu ultrices vitae auctor eu augue ut lectus. Lectus proin nibh nisl condimentum id venenatis a condimentum. Nunc lobortis mattis aliquam faucibus purus in massa. Morbi tempus iaculis urna id volutpat lacus laoreet. Orci nulla pellentesque dignissim enim sit amet. Aliquam ultrices sagittis orci a scelerisque purus semper. Et malesuada fames ac turpis egestas. Faucibus in ornare quam viverra orci sagittis eu volutpat odio. Venenatis tellus in metus vulputate eu. Aliquam ultrices sagittis orci a scelerisque.
 // `
 // // 'none' | 'color' | 'gradient'
-// const colorOptions = [{ type: 'none', options: {} }, { type: 'color', options: { fg: "#4a4543", bg: "#f7f7f7" } }, { type: 'gradient', options: { gradient: 'pastel' } }]
+// const colorOptions = [{ colorType: 'none' }, { colorType: 'color', background: "#ff5f00" }, { colorType: 'gradient', gradient: 'pastel' }]
 // colorOptions.forEach((colorOption) => {
 //     // 'ansi' | 'cfonts' | 'figlet' | 'fonts' | json
 //     const renderOptions = [
@@ -255,10 +267,10 @@ export default class TextEmitter extends EventEmitter {
 //     renderOptions.forEach((renderOption) => {
 //         const maxOutputWidth = process.stdout.columns
 //         const ruler = (str = '1234567890', columns = maxOutputWidth) => str.repeat(Math.ceil(columns / str.length)).slice(0, columns)
-//         const instance = new TextEmitter(renderOption)
+//         const instance = new TextEmitter(renderOption, colorOption)
 //         const rendered = instance.renderText(input, maxOutputWidth, 10)
 //         const maxRenderedArrayLength = Math.max(...Object.values(rendered).map(obj => obj.rendered.length))
-//         console.log(`renderType: ${renderOption.renderType} - Output Height: ${maxRenderedArrayLength}`)
+//         console.log(`colorType: ${colorOption.colorType} - renderType: ${renderOption.renderType} - Output Height: ${maxRenderedArrayLength}`)
 //         console.log(ruler())
 //         Object.values(rendered).forEach((row) => console.log(row.rendered.join('\n'), '\n'))
 //     })

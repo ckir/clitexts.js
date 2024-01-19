@@ -11,11 +11,11 @@ export default class BoxScrollable extends Box {
         // This box must have the following configuration
         const defaultsBox = {
             boxTitle: { options: { hAlign: 'left' } },
-            boxContent: { renderOptions: { type: 'ansi' }, styleOptions: { vAlign: 'top' } }
+            boxContent: { renderOptions: { renderType: 'ansi' }, styleOptions: { vAlign: 'top' } }
         }
 
         // Required configuration prevails user input
-        boxOptions = deepmerge(boxOptions, defaultsBox)
+        boxOptions = deepmerge(defaultsBox, boxOptions)
         super(boxWidth, boxHeight, boxOptions)
         this.boxOptions = boxOptions
     } // constructor

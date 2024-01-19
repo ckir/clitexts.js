@@ -15,7 +15,7 @@ export default class Box extends EventEmitter {
 
         this.boxWidth = boxWidth
         this.boxHeight = boxHeight
-        const themeColors = ThemeManager.getThemeColors()
+        // const themeColors = ThemeManager.getThemeColors()
         const defaultsBox = {
             boxStyle: { borderStyle: 'round', color: 'default' },
             boxTitle: { text: '', options: { hAlign: 'center' } },
@@ -98,14 +98,24 @@ export default class Box extends EventEmitter {
         let titleWidth = stringWidth(titleText)
         if (titleWidth > (lineWidth - 7)) {
             titleText = cliTruncate(titleText, lineWidth - 7)
-
         }
         titleText = box.rightIntersect + titleText + box.leftIntersect
         titleWidth = stringWidth(titleText)
 
+        const isOdd = (num) => { return num % 2 === 1}
+
         switch (hAlign) {
             case 'center':
-                return box.topLeft + box.topRepeat(Math.floor((lineWidth - titleWidth - 2) / 2)) + titleText + box.topRepeat(Math.floor((lineWidth - titleWidth - 2) / 2) + ((lineWidth % 2 === 1) ? 0 : 1)) + box.topRight
+                let padSizeLeft
+                let padSizeRight
+                let padSize = (lineWidth - titleWidth - 2) / 2
+                const adjust = (Number.isInteger(padSize)? 0 : 1)
+                padSize = Math.floor(padSize)
+                padSizeLeft = padSize
+                padSizeRight = padSize + adjust
+                const padLeft = box.topRepeat(padSizeLeft)
+                const padRight = box.topRepeat(padSizeRight)
+                return box.topLeft + padLeft + titleText + padRight + box.topRight
             case 'right':
                 return box.topLeft + box.topRepeat(lineWidth - titleWidth - 2) + titleText + box.topRight
             default: // left
