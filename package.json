@@ -20,6 +20,6 @@
     "type-fest": "^4.9.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.13"
+    "@types/node": "^20.14.0"
   }
 }
